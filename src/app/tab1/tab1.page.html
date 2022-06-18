@@ -1,17 +1,45 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
-  </ion-toolbar>
+	<ion-toolbar>
+		<ion-title>
+			Unicorn list
+		</ion-title>
+	</ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+	<ion-header collapse="condense">
+		<ion-toolbar>
+			<ion-title size="large">Unicorns</ion-title>
+		</ion-toolbar>
+	</ion-header>
+	<ion-content>
+		<ion-grid>
+			<ion-row>
+				<ion-col size="6" *ngFor="let unicorn of unicornService.unicornList; index as position">
+					<ion-img [src]="'https://place-hold.it/500x500/'+getHexColor(unicorn)+getFontAndText(unicorn)" (click)="showActionSheet(unicorn, position)"></ion-img>
+				</ion-col>
+			</ion-row>
+		</ion-grid>
+		<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+			<ion-fab-button (click)="addUnicorn()">
+				<ion-icon name="add-outline"></ion-icon>
+			</ion-fab-button>
+		</ion-fab>
+		<ion-fab vertical="bottom" horizontal="start" slot="fixed">
+			<ion-fab-button (click)="unicornService.mateRandomUnicorns()">
+				<ion-icon name="git-merge-outline"></ion-icon>
+			</ion-fab-button>
+		</ion-fab>
+		<ion-modal
+			[isOpen]="isUnicornInfoModalOpen"
+			[breakpoints]="[0.2, 1]"
+			[initialBreakpoint]="0.2"
+			(didDismiss)="isUnicornInfoModalOpen = false"
+		>
+			<ng-template>
+				<app-unicorn-info [unicorn]="selectedUnicorn"></app-unicorn-info>
+			</ng-template>
+		</ion-modal>
+	</ion-content>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
 </ion-content>
