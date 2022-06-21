@@ -1,7 +1,7 @@
 export enum Gender {
-	'male',
-	'female',
-	'other'
+	'male' = 'male',
+	'female' = 'female',
+	'other' = 'other'
 }
 
 export class Color {
@@ -62,7 +62,7 @@ export class Unicorn {
 	children?: Unicorn[] = [];
 
 	constructor(param: Unicorn) {
-		({ name: this.name, color: this.color, gender: this.gender, age: this.age, } = param);
+		({ name: this.name, color: this.color, gender: this.gender, age: this.age } = param);
 	}
 };
 

@@ -1,0 +1,50 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-buttons slot="start">
+			<ion-button color="medium" (click)="cancel()">Cancel</ion-button>
+		</ion-buttons>
+		<ion-title>Create unicorn</ion-title>
+		<ion-buttons slot="end">
+			<ion-button [disabled]="!isFormValid" (click)="confirm()">Confirm</ion-button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+	<ion-item>
+		<ion-label position="stacked">Name</ion-label>
+		<ion-input [(ngModel)]="name" placeholder="Fluffy, Bonnie, ..."></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-label position="stacked">Age</ion-label>
+		<ion-input [(ngModel)]="age" type="number" placeholder="Unicorns live forever" min="0"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-label position="stacked">Gender</ion-label>
+		<ion-select [(ngModel)]="gender" placeholder="We don't judge">
+			<!-- <ion-select-option *ngFor="let genderOption of genders" [value]="genderOption">{{ genderOption }}</ion-select-option> -->
+			<ion-select-option [value]="genderEnum.male">Male</ion-select-option>
+			<ion-select-option [value]="genderEnum.female">Female</ion-select-option>
+			<ion-select-option [value]="genderEnum.other">Other</ion-select-option>
+		</ion-select>
+	</ion-item>
+	<ion-item>
+		<ion-label slot="start">
+			Color
+		<ion-badge slot="start" #colorPreview [style.backgroundColor]="getColorPreview()">
+			<ion-icon></ion-icon>
+		</ion-badge>
+		</ion-label>
+		<ion-range [(ngModel)]="red" [pin]="true" [pinFormatter]="getColorValue"></ion-range>
+		<ion-range [(ngModel)]="green" [pin]="true" [pinFormatter]="getColorValue"></ion-range>
+		<ion-range [(ngModel)]="blue" [pin]="true" [pinFormatter]="getColorValue"></ion-range>
+		<!-- <ion-label>Red</ion-label> -->
+		<!-- <ion-input [(ngModel)]="red" type="number" placeholder="0 - 255" min="0" max="255"></ion-input> -->
+		<!-- <ion-label>Green</ion-label> -->
+		<!-- <ion-input [(ngModel)]="green" type="number" placeholder="0 - 255" min="0" max="255"></ion-input> -->
+		<!-- <ion-label>Blue</ion-label> -->
+		<!-- <ion-input [(ngModel)]="blue" type="number" placeholder="0 - 255" min="0" max="255"></ion-input> -->
+		<!-- <ion-badge [style]="getColorPreview()"> -->
+		<!-- 	<ion-icon></ion-icon> -->
+		<!-- </ion-badge> -->
+	</ion-item>
+</ion-content>

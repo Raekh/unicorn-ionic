@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
-import { Unicorn } from '../services/unicorn';
+import { ActionSheetController, ModalController } from '@ionic/angular';
+import { Gender, Unicorn } from '../services/unicorn';
 import { UnicornService } from '../services/unicorn.service';
+import { CreateUnicornComponent } from './create-unicorn/create-unicorn.component';
 
 @Component({
 	selector: 'app-tab1',
@@ -15,7 +16,8 @@ export class Tab1Page {
 
 	constructor(
 		public unicornService: UnicornService,
-		public actionSheetController: ActionSheetController
+		public actionSheetController: ActionSheetController,
+		public modal: ModalController
 	) {
 		this.unicornService.listAllUnicorns();
 	}
@@ -29,7 +31,12 @@ export class Tab1Page {
 	}
 
 	getHexColor(unicorn: Unicorn) {
-		return ((unicorn.color.r << 16) | (unicorn.color.g << 8) | unicorn.color.b).toString(16);
+		// return ((unicorn.color.r << 16) | (unicorn.color.g << 8) | unicorn.color.b).toString(16);
+		return `${this.getHexString(unicorn.color.r)}${this.getHexString(unicorn.color.g)}${this.getHexString(unicorn.color.b)}`;
+	}
+
+	getHexString(color: number) {
+		return color.toString(16).padEnd(2, '0');
 	}
 
 	getFontAndText(unicorn: Unicorn) {
@@ -38,6 +45,22 @@ export class Tab1Page {
 
 	getUrlName(unicorn: Unicorn) {
 		return unicorn.name.replace(' ', '_');
+	}
+
+	displayUnicornInfo(unicorn: Unicorn) {
+		this.selectedUnicorn = unicorn;
+		this.isUnicornInfoModalOpen = true;
+	}
+
+	getBadgeColor(unicorn: Unicorn) {
+		switch(unicorn.gender) {
+			case Gender.male:
+				return 'primary';
+			case Gender.female:
+				return 'danger';
+			default:
+				return 'dark';
+		}
 	}
 
 	public async showActionSheet(unicorn: Unicorn, position: number) {
@@ -71,5 +94,16 @@ export class Tab1Page {
 			]
 		});
 		await actionSheet.present();
+	}
+
+	async openAddUnicornModal() {
+		const modal = await this.modal.create({
+			component: CreateUnicornComponent
+		});
+		modal.present();
+		const { data } = await modal.onWillDismiss();
+		if(data !== null) {
+			this.unicornService.addUnicorn(data);
+		}
 	}
 }

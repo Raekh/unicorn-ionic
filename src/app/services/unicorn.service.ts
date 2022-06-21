@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Color, Gender, Unicorn } from './unicorn';
 
-// export enum MergeStrategy {
-// 	[key: string]
-// }
-//
-//
-
 export enum ColorMergeStrategy {
 	'average' = 'average',
 	'pick' = 'pick'
@@ -29,6 +23,12 @@ export class UnicornService {
 				name: 'Bertrand',
 				color: new Color({r: 0, g:0, b:255}),
 				gender: Gender.male,
+				age: 25
+			}),
+			new Unicorn({
+				name: 'Zorglub',
+				color: new Color({r: 120, g:120, b:120}),
+				gender: Gender.other,
 				age: 25
 			}),
 			new Unicorn({
@@ -77,18 +77,13 @@ export class UnicornService {
 		console.log('%cunicornList', 'color:orange', this.unicornList);
 	}
 
-	getRandomEnum<T extends object>(anEnum: T): T[keyof T] {
-		const enumValues = Object.keys(anEnum)
-		.filter(key => typeof anEnum[key as keyof typeof anEnum] === 'number')
-		.map(key => key);
-
-		const randomIndex = Math.floor(Math.random() * enumValues.length);
-		return anEnum[randomIndex as keyof T];
-	}
-
 	listAllUnicorns() {
 		console.log(this.unicornList);
 	}
+
+    addUnicorn(newUnicorn: Unicorn) {
+		this.unicornList.push(newUnicorn);
+    }
 
 	mergeColors(aPrimary: number, bPrimary: number, strategy: string): number {
 		switch(ColorMergeStrategy[strategy]) {
@@ -112,11 +107,6 @@ export class UnicornService {
 	}
 
 	computeOffspringColor(unicornA: Unicorn, unicornB: Unicorn): Color {
-		// const colorMergeStrategies = [
-		// 	this.getRandomEnum(ColorMergeStrategy),
-		// 	this.getRandomEnum(ColorMergeStrategy),
-		// 	this.getRandomEnum(ColorMergeStrategy),
-		// ];
 		const newColor = new Color('000');
 
 		console.log('%cthis.computeOffspringColor', 'color:red');
@@ -129,7 +119,6 @@ export class UnicornService {
 	}
 
 	computeOffspringName(unicornA: Unicorn, unicornB: Unicorn): string {
-		// const nameMergeStrategy = this.getRandomEnum(NameMergeStrategy);
 		return this.mergeNames(unicornA.name, unicornB.name, NameMergeStrategy.concatenate);
 	}
 
@@ -147,7 +136,7 @@ export class UnicornService {
 
 		if(consanguinity) {
 			console.log('DISGUSTANG');
-			return;
+			throw new Error('DISGUSTANG');
 		}
 
 		const offspringColor = this.computeOffspringColor(unicornA, unicornB);

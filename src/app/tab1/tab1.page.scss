@@ -1,0 +1,32 @@
+.unicorn-gender-icon {
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	border-radius: 50%;
+	bottom:0;
+	right:0;
+	// mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0.5) 50%);
+	// color: black;
+}
+
+.list-item {
+	position: relative;
+}
+
+.avatar {
+	// border: 1px solid yellow;
+	position: relative;
+
+	img {
+		height: 100%;
+		width: 100%;
+		border-radius: 50%;
+		// -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0.5) 50%);
+	}
+}
+
+.unicorn-label-subtitle {
+	font-size: 0.8rem;
+	font-style: italic;
+	color:grey;
+}
