@@ -49,7 +49,7 @@
 			<!-- 	<ion-label>Card Button Item 2</ion-label> -->
 			<!-- </ion-item> -->
 			<!-- <ion-label>Pokémon Yellow</ion-label> -->
-			<ion-item class="list-item" *ngFor="let unicorn of unicornService.unicornList">
+			<ion-item class="list-item" *ngFor="let unicorn of unicornService.unicornList" (click)="displayUnicornInfo(unicorn)">
 				<ion-avatar slot="start" class="avatar" [style]="'background-color:#'+getHexColor(unicorn)+';'">
 					<img src="assets/images/unicorn-avatar.png" />
 					<ion-badge
@@ -65,7 +65,6 @@
 				<ion-label>
 					<h2>{{ unicorn.name }}</h2>
 					<h3 class="unicorn-label-subtitle">{{ unicorn.age }}</h3>
-					<!-- <p>Listen, I've had a pretty messed up day...</p> -->
 				</ion-label>
 			</ion-item>
 		</ion-list>
@@ -81,8 +80,8 @@
 		</ion-fab>
 		<ion-modal
 			[isOpen]="isUnicornInfoModalOpen"
-			[breakpoints]="[0.2, 1]"
-			[initialBreakpoint]="0.2"
+			[breakpoints]="[0,0.8]"
+			[initialBreakpoint]="0.8"
 			(didDismiss)="isUnicornInfoModalOpen = false"
 		>
 			<ng-template>

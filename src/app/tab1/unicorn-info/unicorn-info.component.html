@@ -1,12 +1,52 @@
-<ion-card>
-	<ion-card-header>
-		<ion-card-title>{{ unicorn.name }}</ion-card-title>
-		<ion-card-subtitle>A very #fluffy unicorn with a temper you would call #angry</ion-card-subtitle>
-	</ion-card-header>
+<ion-card class="unicorn-info">
+	<!-- <ion-card-header> -->
+	<!-- 	<ion-card-title>{{ unicorn.name }}</ion-card-title> -->
+	<!-- 	<ion-card-subtitle>A very #fluffy unicorn with a temper you would call #angry</ion-card-subtitle> -->
+	<!-- </ion-card-header> -->
 
-	<ion-card-content>
-		Keep close to Nature's heart... and break clear away, once in awhile,
-		and climb a mountain or spend a week in the woods. Wash your spirit clean.
+	<!-- <ion-card-content> -->
+	<!-- 	<ion-item> -->
+	<!-- 		<ion-avatar slot="start" class="avatar" [style.backgroundColor]="getHexColor()"> -->
+	<!-- 			<img src="assets/images/unicorn-avatar.png" /> -->
+	<!-- 			<ion-badge -->
+	<!-- 					class="unicorn-gender-icon" -->
+	<!-- 					*ngIf="getBadgeColor() !== 'dark'" -->
+	<!-- 					[color]="getBadgeColor()" -->
+	<!-- 					horizontal="end" -->
+	<!-- 					vertical="bottom" -->
+	<!-- 					> -->
+	<!-- 					<ion-icon></ion-icon> -->
+	<!-- 			</ion-badge> -->
+	<!-- 		</ion-avatar> -->
+	<!-- 		<ion-label> -->
+	<!-- 			<h2>{{ unicorn.name }}</h2> -->
+	<!-- 			<h3 class="unicorn-label-subtitle">{{ unicorn.age }}</h3> -->
+	<!-- 		</ion-label> -->
+	<!-- 	</ion-item> -->
+	<!-- </ion-card-content> -->
+	<div class="img-wrapper">
+		<img
+			src="assets/images/unicorn-avatar.png"
+			[style.backgroundColor]="getHexColor()"
+		 />
+		<ion-badge
+			class="unicorn-gender-icon"
+			*ngIf="getBadgeColor() !== 'dark'"
+			[color]="getBadgeColor()"
+			horizontal="end"
+			vertical="bottom"
+		>
+			<ion-icon></ion-icon>
+		</ion-badge>
+	</div>
+	<ion-card-content class="ion-text-center">
+		<h1>{{ unicorn.name }}</h1>
+		<ion-text color="medium">
+			<div style="display: flex" class="ion-justify-content-center">
+				<ion-icon name="location-outline" color="medium"></ion-icon>
+				<p>2345 Street, Ohio, USA.</p>
+			</div>
+		</ion-text>
 	</ion-card-content>
 </ion-card>
 
