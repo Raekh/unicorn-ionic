@@ -17,7 +17,7 @@ export class Tab1Page {
 	constructor(
 		public unicornService: UnicornService,
 		public actionSheetController: ActionSheetController,
-		public modal: ModalController
+		public modal: ModalController,
 	) {
 		this.unicornService.listAllUnicorns();
 	}
