@@ -1,0 +1,6 @@
+FROM node:16.15.1
+WORKDIR /usr/src/unicorn-ionic
+COPY package*.json ./
+RUN npm install -g @ionic/cli @angular/cli @angular-devkit/build-angular && npm install
+EXPOSE 8100
+CMD ["npm", "run", "dev"]

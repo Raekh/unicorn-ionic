@@ -1,0 +1,12 @@
+version: '3'
+services:
+  unicorn-ionic:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    ports:
+      - "8100:8100"
+    container_name: unicorn-ionic
+    volumes:
+      - .:/usr/src/unicorn-ionic
+      - /usr/src/unicorn-ionic/node_modules
