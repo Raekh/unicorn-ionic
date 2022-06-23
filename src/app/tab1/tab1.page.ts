@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ActionSheetController, ModalController } from '@ionic/angular';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ActionSheetController, IonSearchbar, ModalController } from '@ionic/angular';
 import { Gender, Unicorn } from '../services/unicorn';
 import { UnicornService } from '../services/unicorn.service';
 import { CreateUnicornComponent } from './create-unicorn/create-unicorn.component';
@@ -11,6 +11,10 @@ import { CreateUnicornComponent } from './create-unicorn/create-unicorn.componen
 })
 export class Tab1Page {
 
+	@ViewChild('searchBar') searchBar: ElementRef<IonSearchbar>;
+	unicornList: Unicorn[];
+	currentSearchValue = '';
+
 	selectedUnicorn: Unicorn = null;
     isUnicornInfoModalOpen = false;
 
@@ -19,11 +23,24 @@ export class Tab1Page {
 		public actionSheetController: ActionSheetController,
 		public modal: ModalController,
 	) {
-		this.unicornService.listAllUnicorns();
+		this.unicornList = this.unicornService.listAllUnicorns();
 	}
 
-	addUnicorn() {
-		console.log('add unicorn');
+	get noUnicornsToDisplay() {
+		return this.unicornList.length === 0
+		|| this.unicornList.every((unicorn: Unicorn) => !this.shouldDisplayUnicorn(unicorn));
+	}
+
+	get isSearchEmpty() {
+		return this.currentSearchValue === '';
+	}
+
+	processSearchBarChange(event: any) {
+		this.currentSearchValue = event.target.value;
+	}
+
+	shouldDisplayUnicorn(unicorn: Unicorn): boolean {
+		return unicorn.name.indexOf(this.currentSearchValue) !== -1;
 	}
 
 	viewUnicornInfo(unicorn: Unicorn) {

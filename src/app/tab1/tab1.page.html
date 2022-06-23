@@ -3,32 +3,38 @@
 		<ion-title>Unicorn list</ion-title>
 	</ion-toolbar>
 	<ion-toolbar>
-		<ion-searchbar></ion-searchbar>
+		<ion-searchbar #searchBar (ionInput)="processSearchBarChange($event)"></ion-searchbar>
 	</ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 	<ion-content>
-		<ion-list>
-			<ion-item class="list-item" *ngFor="let unicorn of unicornService.unicornList" (click)="displayUnicornInfo(unicorn)">
-				<ion-avatar slot="start" class="avatar" [style]="'background-color:#'+getHexColor(unicorn)+';'">
-					<img src="assets/images/unicorn-avatar.png" />
-					<ion-badge
-						class="unicorn-gender-icon"
-						*ngIf="getBadgeColor(unicorn) !== 'dark'"
-						[color]="getBadgeColor(unicorn)"
-						horizontal="end"
-						vertical="bottom"
-					>
-						<ion-icon></ion-icon>
-					</ion-badge>
-				</ion-avatar>
-				<ion-label>
-					<h2>{{ unicorn.name }}</h2>
-					<h3 class="unicorn-label-subtitle">{{ unicorn.age }}</h3>
-				</ion-label>
-			</ion-item>
+		<ion-list *ngIf="!noUnicornsToDisplay">
+			<ng-container *ngFor="let unicorn of unicornList">
+				<ion-item class="list-item" *ngIf="shouldDisplayUnicorn(unicorn)" (click)="displayUnicornInfo(unicorn)">
+					<ion-avatar slot="start" class="avatar" [style]="'background-color:#'+getHexColor(unicorn)+';'">
+						<img src="assets/images/unicorn-avatar.png" />
+						<ion-badge
+								class="unicorn-gender-icon"
+								*ngIf="getBadgeColor(unicorn) !== 'dark'"
+								[color]="getBadgeColor(unicorn)"
+								horizontal="end"
+								vertical="bottom"
+								>
+								<ion-icon></ion-icon>
+						</ion-badge>
+					</ion-avatar>
+					<ion-label>
+						<h2>{{ unicorn.name }}</h2>
+						<h3 class="unicorn-label-subtitle">{{ unicorn.age }}</h3>
+					</ion-label>
+				</ion-item>
+			</ng-container>
 		</ion-list>
+		<ion-item *ngIf="noUnicornsToDisplay">
+			<span *ngIf="isSearchEmpty">No unicorns to display. Feel free to recruit ;D</span>
+			<span *ngIf="!isSearchEmpty">No unicorn with that name.</span>
+		</ion-item>
 		<ion-fab vertical="bottom" horizontal="end" slot="fixed">
 			<ion-fab-button (click)="openAddUnicornModal()">
 				<ion-icon name="add-outline"></ion-icon>
