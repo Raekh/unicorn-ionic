@@ -88,23 +88,19 @@ export class Tab1Page {
 	selectUnicorn(unicornToDelete: Unicorn) {
 		if(this.stateIs(UiState.deleting)) {
 			const unicornIndex = this.unicornsToDelete.findIndex((unicorn: Unicorn) => unicorn === unicornToDelete);
-			console.log('%cindex', 'color:limegreen', unicornIndex);
 			unicornIndex !== -1
 				? this.unicornsToDelete.splice(unicornIndex, 1)
 				: this.unicornsToDelete.push(unicornToDelete);
 			// if(this.unicornsToDelete.includes(unicorn)) {
 			// 	const un
 			// }
-			console.log('%cunicorns to delete', 'color:yellow', this.unicornsToDelete);
 		}
 		if(this.stateIs(UiState.mating)) {
-			console.log('%cselectUnicorn', 'color:brown');
 			this.firstMate = unicornToDelete;
 			this.setState(UiState.waitingForSecondMate);
 			return;
 		}
 		if(this.stateIs(UiState.waitingForSecondMate)) {
-			console.log('%cshould not go there yet', 'color:red');
 			this.secondMate = unicornToDelete;
 			this.unicornService.mateUnicorns(this.firstMate, this.secondMate);
 			this.refreshUnicorns();
@@ -135,10 +131,6 @@ export class Tab1Page {
 	areUnicornsRelated(unicornA: Unicorn, unicornB: Unicorn) {
 		return unicornA.children.includes(unicornA)
 		|| unicornB.children.includes(unicornA);
-	}
-
-	viewUnicornInfo(unicorn: Unicorn) {
-		console.log(`view unicon info from ${unicorn.name}`);
 	}
 
 	getHexColor(unicorn: Unicorn) {
@@ -184,6 +176,17 @@ export class Tab1Page {
 		this.setState(UiState.deleting);
 	}
 
+	cancelMatingProcess() {
+		this.firstMate = null;
+		this.secondMate = null;
+		this.setState(UiState.browsing);
+	}
+
+	cancelDeletingProcess() {
+		this.unicornsToDelete = [];
+		this.setState(UiState.browsing);
+	}
+
 	public async showActionSheet(unicorn: Unicorn, position: number) {
 		const actionSheet = await this.actionSheetController.create({
 			header: 'Unicorns',
@@ -192,10 +195,8 @@ export class Tab1Page {
 					text: `View info`,
 					icon: 'information-circle-outline',
 					handler: () => {
-						console.log('%chandler should work', 'color:deeppink', this.isUnicornInfoModalOpen);
 						this.selectedUnicorn = unicorn;
 						this.isUnicornInfoModalOpen = true;
-						console.log('%chandler should work', 'color:limegreen', this.isUnicornInfoModalOpen);
 					},
 				},
 				{
@@ -203,7 +204,6 @@ export class Tab1Page {
 					role: 'destructive',
 					icon: 'trash',
 					handler: () => {
-						console.log(`Deleting ${unicorn.name} at position ${position}`);
 					},
 				},
 				{

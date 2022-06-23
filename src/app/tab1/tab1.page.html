@@ -1,4 +1,5 @@
 <ion-header translucent>
+	<!-- BROWSING -->
 	<ion-toolbar *ngIf="stateIs(enumUiState.browsing)">
 		<ion-buttons slot="secondary">
 			<ion-button (click)="startMatingProcess()">
@@ -17,27 +18,33 @@
 	<ion-toolbar *ngIf="stateIs(enumUiState.browsing)">
 		<ion-searchbar #searchBar (ionInput)="processSearchBarChange($event)"></ion-searchbar>
 	</ion-toolbar>
+	<!-- /BROWSING -->
+	<!-- MATING - FIRST SELECTION -->
 	<ion-toolbar *ngIf="stateIs(enumUiState.mating)">
 		<ion-buttons slot="secondary">
-			<ion-button (click)="setState(enumUiState.browsing)">
+			<ion-button (click)="cancelMatingProcess()">
 				<ion-icon slot="icon-only" name="close-outline"></ion-icon>
 			</ion-button>
 		</ion-buttons>
 
 		<ion-title>Select first unicorn</ion-title>
 	</ion-toolbar>
+	<!-- /MATING - FIRST SELECTION -->
+	<!-- MATING - SECOND SELECTION -->
 	<ion-toolbar *ngIf="stateIs(enumUiState.waitingForSecondMate)">
 		<ion-buttons slot="secondary">
-			<ion-button (click)="setState(enumUiState.browsing)">
+			<ion-button (click)="cancelMatingProcess()">
 				<ion-icon slot="icon-only" name="close-outline"></ion-icon>
 			</ion-button>
 		</ion-buttons>
 
 		<ion-title>Select second mate</ion-title>
 	</ion-toolbar>
+	<!-- /MATING - SECOND SELECTION -->
+	<!-- DELETING -->
 	<ion-toolbar *ngIf="stateIs(enumUiState.deleting)">
 		<ion-buttons slot="secondary">
-			<ion-button (click)="setState(enumUiState.browsing)">
+			<ion-button (click)="cancelDeletingProcess()">
 				<ion-icon slot="icon-only" name="close-outline"></ion-icon>
 			</ion-button>
 		</ion-buttons>
@@ -50,6 +57,7 @@
 			</ion-button>
 		</ion-buttons>
 	</ion-toolbar>
+	<!-- /DELETING -->
 </ion-header>
 
 <ion-content [fullscreen]="true">

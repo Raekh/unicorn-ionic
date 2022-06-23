@@ -10,7 +10,8 @@ export enum ColorMergeStrategy {
 }
 
 export enum NameMergeStrategy {
-	'concatenate' = 'concatenate'
+	'concatenate' = 'concatenate',
+	'compound' = 'compound'
 }
 
 @Injectable({
@@ -23,8 +24,6 @@ export class UnicornService {
 	constructor() {
 		this.unicornList = JSON.parse(localStorage.getItem(UNICORN_LIST)) as Unicorn[] || [];
 		const appFirstRun = Boolean(localStorage.getItem(FIRST_RUN) || true);
-		console.log('%cunicornList length', 'color:orange', this.unicornList.length);
-		console.log('%cappFirstRun', 'color:yellow', appFirstRun);
 		if(this.unicornList.length === 0 && appFirstRun) {
 			this.unicornList = [
 				new Unicorn({
@@ -98,7 +97,6 @@ export class UnicornService {
 	// }
 
 	listAllUnicorns() {
-		console.log(this.unicornList);
 		return this.unicornList;
 	}
 
@@ -110,11 +108,9 @@ export class UnicornService {
 	mergeColors(aPrimary: number, bPrimary: number, strategy: string): number {
 		switch(ColorMergeStrategy[strategy]) {
 			case ColorMergeStrategy.average:
-				console.log('%caverage was chosen', 'color:limegreen');
 				return (aPrimary + bPrimary) / 2;
 
 			case ColorMergeStrategy.pick:
-				console.log('%cpick was chosen', 'color:deeppink');
 				return Math.random() >= 0.5 ? bPrimary : aPrimary;
 		}
 	}
@@ -122,16 +118,19 @@ export class UnicornService {
 	mergeNames(aName: string, bName: string, strategy: NameMergeStrategy): string {
 		switch(strategy as NameMergeStrategy) {
 			case NameMergeStrategy.concatenate:
-				console.log('%cfirst option', '', aName+' '+bName);
-				console.log('%csecond option', '', bName+' '+aName);
 				return Math.random() >= 0.5 ? aName+' '+bName : bName+' '+aName;
+			case NameMergeStrategy.compound:
+				const firstOption = Math.random() >= 0.5;
+				if(firstOption) {
+					return aName.substring(0, aName.length/2)+bName.substring(bName.length/2);
+				} else {
+					return bName.substring(0, bName.length/2)+aName.substring(aName.length/2);
+				}
 		}
 	}
 
 	computeOffspringColor(unicornA: Unicorn, unicornB: Unicorn): Color {
 		const newColor = new Color('000');
-
-		console.log('%cthis.computeOffspringColor', 'color:red');
 
 		newColor.r = this.mergeColors(unicornA.color.r, unicornB.color.r, ColorMergeStrategy.pick);
 		newColor.g = this.mergeColors(unicornA.color.g, unicornB.color.g, ColorMergeStrategy.pick);
@@ -141,7 +140,7 @@ export class UnicornService {
 	}
 
 	computeOffspringName(unicornA: Unicorn, unicornB: Unicorn): string {
-		return this.mergeNames(unicornA.name, unicornB.name, NameMergeStrategy.concatenate);
+		return this.mergeNames(unicornA.name, unicornB.name, NameMergeStrategy.compound);
 	}
 
 	mateUnicorns(unicornA: Unicorn, unicornB: Unicorn) {
@@ -157,7 +156,6 @@ export class UnicornService {
 			[unicornA, unicornB].some((unicorn: Unicorn) => unicorn.children.includes(unicornA) || unicorn.children.includes(unicornB));
 
 		if(consanguinity) {
-			console.log('DISGUSTANG');
 			throw new Error('DISGUSTANG');
 		}
 
@@ -170,6 +168,7 @@ export class UnicornService {
 			age: 0,
 			gender: Math.random() >= 0.5 ? Gender.female : Gender.male
 		});
+
 		this.unicornList.find((unicorn: Unicorn) => unicorn === unicornA).children.push(offspring);
 		this.unicornList.find((unicorn: Unicorn) => unicorn === unicornB).children.push(offspring);
 		this.addUnicorn(offspring);
