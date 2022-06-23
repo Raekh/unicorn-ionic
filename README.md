@@ -1,7 +1,7 @@
 # unicorn-ionic
 Unicorn management app - ClickEat
 
-This is a quick app which as made as part of a technical test for ClickEat.
+This is a quick app which was made as part of a technical test for ClickEat.
 
 ## Install/run
 
