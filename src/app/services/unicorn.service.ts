@@ -77,25 +77,25 @@ export class UnicornService {
 		}
 	}
 
-	mateRandomUnicorns() {
-		const maleUnicorns = this.unicornList.filter((unicorn: Unicorn) => unicorn.gender === Gender.male);
-		const femaleUnicorns = this.unicornList.filter((unicorn: Unicorn) => unicorn.gender === Gender.female);
+	// mateRandomUnicorns() {
+	// 	const maleUnicorns = this.unicornList.filter((unicorn: Unicorn) => unicorn.gender === Gender.male);
+	// 	const femaleUnicorns = this.unicornList.filter((unicorn: Unicorn) => unicorn.gender === Gender.female);
 
-		const randomMaleUnicornIndex = Math.floor(Math.random() * maleUnicorns.length);
-		const randomFemaleUnicornIndex = Math.floor(Math.random() * femaleUnicorns.length);
+	// 	const randomMaleUnicornIndex = Math.floor(Math.random() * maleUnicorns.length);
+	// 	const randomFemaleUnicornIndex = Math.floor(Math.random() * femaleUnicorns.length);
 
-		const randomMaleUnicorn = maleUnicorns[randomMaleUnicornIndex];
-		const randomFemaleUnicorn = femaleUnicorns[randomFemaleUnicornIndex];
+	// 	const randomMaleUnicorn = maleUnicorns[randomMaleUnicornIndex];
+	// 	const randomFemaleUnicorn = femaleUnicorns[randomFemaleUnicornIndex];
 
-		const offspring = this.mateUnicorns(randomMaleUnicorn, randomFemaleUnicorn);
-		randomMaleUnicorn.children.push(offspring);
-		randomFemaleUnicorn.children.push(offspring);
+	// 	const offspring = this.mateUnicorns(randomMaleUnicorn, randomFemaleUnicorn);
+	// 	randomMaleUnicorn.children.push(offspring);
+	// 	randomFemaleUnicorn.children.push(offspring);
 
-		// this.unicornList.push(offspring);
-		this.addUnicorn(offspring);
+	// 	// this.unicornList.push(offspring);
+	// 	this.addUnicorn(offspring);
 
-		console.log('%cunicornList', 'color:orange', this.unicornList);
-	}
+	// 	console.log('%cunicornList', 'color:orange', this.unicornList);
+	// }
 
 	listAllUnicorns() {
 		console.log(this.unicornList);
@@ -170,7 +170,16 @@ export class UnicornService {
 			age: 0,
 			gender: Math.random() >= 0.5 ? Gender.female : Gender.male
 		});
+		this.unicornList.find((unicorn: Unicorn) => unicorn === unicornA).children.push(offspring);
+		this.unicornList.find((unicorn: Unicorn) => unicorn === unicornB).children.push(offspring);
+		this.addUnicorn(offspring);
+	}
 
-		return offspring;
+	deleteUnicorns(unicornsToDelete: Unicorn[]) {
+		unicornsToDelete.forEach((unicornToDelete) => {
+			const unicornIndex = this.unicornList.findIndex((unicorn: Unicorn) => unicorn === unicornToDelete);
+			this.unicornList.splice(unicornIndex, 1);
+		});
+		localStorage.setItem(UNICORN_LIST, JSON.stringify(this.unicornList));
 	}
 }

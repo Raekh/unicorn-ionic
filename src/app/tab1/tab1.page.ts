@@ -4,6 +4,13 @@ import { Gender, Unicorn } from '../services/unicorn';
 import { UnicornService } from '../services/unicorn.service';
 import { CreateUnicornComponent } from './create-unicorn/create-unicorn.component';
 
+enum UiState {
+	'browsing',
+	'mating',
+	'waitingForSecondMate',
+	'deleting'
+}
+
 @Component({
 	selector: 'app-tab1',
 	templateUrl: 'tab1.page.html',
@@ -13,18 +20,26 @@ export class Tab1Page {
 
 	@ViewChild('searchBar') searchBar: ElementRef<IonSearchbar>;
 	unicornList: Unicorn[];
-	currentSearchValue = '';
 
+	uiState: UiState = UiState.browsing;
+	enumUiState = UiState;
+	currentSearchValue = '';
 	selectedUnicorn: Unicorn = null;
+
+	firstMate: Unicorn | null;
+	secondMate: Unicorn | null;
+
     isUnicornInfoModalOpen = false;
+    unicornsToDelete: Unicorn[] = [];
 
 	constructor(
 		public unicornService: UnicornService,
 		public actionSheetController: ActionSheetController,
 		public modal: ModalController,
 	) {
-		this.unicornList = this.unicornService.listAllUnicorns();
+		this.refreshUnicorns();
 	}
+
 
 	get noUnicornsToDisplay() {
 		return this.unicornList.length === 0
@@ -35,12 +50,91 @@ export class Tab1Page {
 		return this.currentSearchValue === '';
 	}
 
+	get isDeleteSelectionValid() {
+		return this.unicornsToDelete.length > 0;
+	}
+
+	stateIs(state: UiState) {
+		return this.uiState === state;
+	}
+
+	stateIsIn(states: UiState[]) {
+		return states.includes(this.uiState);
+	}
+
+	setState(newState: UiState) {
+		this.uiState = newState;
+	}
+
+	refreshUnicorns() {
+		this.unicornList = this.unicornService.listAllUnicorns();
+	}
+
 	processSearchBarChange(event: any) {
 		this.currentSearchValue = event.target.value;
 	}
 
 	shouldDisplayUnicorn(unicorn: Unicorn): boolean {
 		return unicorn.name.indexOf(this.currentSearchValue) !== -1;
+	}
+
+	shouldDisplayCheckbox(unicorn: Unicorn) {
+		return this.stateIs(UiState.deleting) || (
+			this.stateIsIn([UiState.mating, UiState.waitingForSecondMate])
+			&& this.isUnicornFitForMating(unicorn)
+		);
+	}
+
+	selectUnicorn(unicornToDelete: Unicorn) {
+		if(this.stateIs(UiState.deleting)) {
+			const unicornIndex = this.unicornsToDelete.findIndex((unicorn: Unicorn) => unicorn === unicornToDelete);
+			console.log('%cindex', 'color:limegreen', unicornIndex);
+			unicornIndex !== -1
+				? this.unicornsToDelete.splice(unicornIndex, 1)
+				: this.unicornsToDelete.push(unicornToDelete);
+			// if(this.unicornsToDelete.includes(unicorn)) {
+			// 	const un
+			// }
+			console.log('%cunicorns to delete', 'color:yellow', this.unicornsToDelete);
+		}
+		if(this.stateIs(UiState.mating)) {
+			console.log('%cselectUnicorn', 'color:brown');
+			this.firstMate = unicornToDelete;
+			this.setState(UiState.waitingForSecondMate);
+			return;
+		}
+		if(this.stateIs(UiState.waitingForSecondMate)) {
+			console.log('%cshould not go there yet', 'color:red');
+			this.secondMate = unicornToDelete;
+			this.unicornService.mateUnicorns(this.firstMate, this.secondMate);
+			this.refreshUnicorns();
+			this.setState(UiState.browsing);
+			return;
+		}
+	}
+
+	deleteSelectedUnicorns() {
+		this.unicornService.deleteUnicorns(this.unicornsToDelete);
+		this.setState(UiState.browsing);
+		this.refreshUnicorns();
+	}
+
+	isUnicornFitForMating(unicorn: Unicorn) {
+		if(unicorn.gender === Gender.other) {
+			return false;
+		}
+		if(this.stateIs(UiState.mating)) {
+			return true;
+		}
+		if(this.stateIs(UiState.waitingForSecondMate)) {
+			return unicorn.gender !== this.firstMate.gender
+			&& !this.areUnicornsRelated(this.firstMate, unicorn);
+		}
+	}
+
+	areUnicornsRelated(unicornA: Unicorn, unicornB: Unicorn) {
+		return unicornA.children.includes(unicornA)
+		|| unicornB.children.includes(unicornA);
 	}
 
 	viewUnicornInfo(unicorn: Unicorn) {
@@ -78,6 +172,16 @@ export class Tab1Page {
 			default:
 				return 'dark';
 		}
+	}
+
+	startMatingProcess() {
+		this.currentSearchValue = '';
+		this.setState(UiState.mating);
+	}
+
+	startDeletingProcess() {
+		this.currentSearchValue = '';
+		this.setState(UiState.deleting);
 	}
 
 	public async showActionSheet(unicorn: Unicorn, position: number) {

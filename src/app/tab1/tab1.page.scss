@@ -13,6 +13,10 @@
 	position: relative;
 }
 
+.ion-item.selected {
+	border: 1px solid red;
+}
+
 .avatar {
 	// border: 1px solid yellow;
 	position: relative;

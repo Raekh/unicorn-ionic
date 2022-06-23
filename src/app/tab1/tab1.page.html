@@ -1,9 +1,54 @@
-<ion-header [translucent]="true">
-	<ion-toolbar>
-		<ion-title>Unicorn list</ion-title>
+<ion-header translucent>
+	<ion-toolbar *ngIf="stateIs(enumUiState.browsing)">
+		<ion-buttons slot="secondary">
+			<ion-button (click)="startMatingProcess()">
+				<ion-icon slot="icon-only" name="heart-half-outline"></ion-icon>
+			</ion-button>
+		</ion-buttons>
+
+		<ion-title>Unicorn manager</ion-title>
+
+		<ion-buttons slot="primary">
+			<ion-button (click)="startDeletingProcess()">
+				<ion-icon slot="icon-only" name="trash"></ion-icon>
+			</ion-button>
+		</ion-buttons>
 	</ion-toolbar>
-	<ion-toolbar>
+	<ion-toolbar *ngIf="stateIs(enumUiState.browsing)">
 		<ion-searchbar #searchBar (ionInput)="processSearchBarChange($event)"></ion-searchbar>
+	</ion-toolbar>
+	<ion-toolbar *ngIf="stateIs(enumUiState.mating)">
+		<ion-buttons slot="secondary">
+			<ion-button (click)="setState(enumUiState.browsing)">
+				<ion-icon slot="icon-only" name="close-outline"></ion-icon>
+			</ion-button>
+		</ion-buttons>
+
+		<ion-title>Select first unicorn</ion-title>
+	</ion-toolbar>
+	<ion-toolbar *ngIf="stateIs(enumUiState.waitingForSecondMate)">
+		<ion-buttons slot="secondary">
+			<ion-button (click)="setState(enumUiState.browsing)">
+				<ion-icon slot="icon-only" name="close-outline"></ion-icon>
+			</ion-button>
+		</ion-buttons>
+
+		<ion-title>Select second mate</ion-title>
+	</ion-toolbar>
+	<ion-toolbar *ngIf="stateIs(enumUiState.deleting)">
+		<ion-buttons slot="secondary">
+			<ion-button (click)="setState(enumUiState.browsing)">
+				<ion-icon slot="icon-only" name="close-outline"></ion-icon>
+			</ion-button>
+		</ion-buttons>
+
+		<ion-title>Delete</ion-title>
+
+		<ion-buttons slot="primary">
+			<ion-button *ngIf="isDeleteSelectionValid" (click)="deleteSelectedUnicorns()">
+				<ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+			</ion-button>
+		</ion-buttons>
 	</ion-toolbar>
 </ion-header>
 
@@ -11,7 +56,8 @@
 	<ion-content>
 		<ion-list *ngIf="!noUnicornsToDisplay">
 			<ng-container *ngFor="let unicorn of unicornList">
-				<ion-item class="list-item" *ngIf="shouldDisplayUnicorn(unicorn)" (click)="displayUnicornInfo(unicorn)">
+				<ion-item class="list-item" *ngIf="shouldDisplayUnicorn(unicorn)" [ngClass]="{'selected': unicorn === FirstMate}">
+					<ion-checkbox *ngIf="shouldDisplayCheckbox(unicorn)" (ionChange)="selectUnicorn(unicorn)" slot="start"></ion-checkbox>
 					<ion-avatar slot="start" class="avatar" [style]="'background-color:#'+getHexColor(unicorn)+';'">
 						<img src="assets/images/unicorn-avatar.png" />
 						<ion-badge
@@ -28,6 +74,7 @@
 						<h2>{{ unicorn.name }}</h2>
 						<h3 class="unicorn-label-subtitle">{{ unicorn.age }}</h3>
 					</ion-label>
+					<ion-button *ngIf="stateIs(enumUiState.browsing)" fill="outline" slot="end" (click)="displayUnicornInfo(unicorn)">View</ion-button>
 				</ion-item>
 			</ng-container>
 		</ion-list>
@@ -35,16 +82,16 @@
 			<span *ngIf="isSearchEmpty">No unicorns to display. Feel free to recruit ;D</span>
 			<span *ngIf="!isSearchEmpty">No unicorn with that name.</span>
 		</ion-item>
-		<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+		<ion-fab vertical="bottom" horizontal="center" slot="fixed">
 			<ion-fab-button (click)="openAddUnicornModal()">
 				<ion-icon name="add-outline"></ion-icon>
 			</ion-fab-button>
 		</ion-fab>
-		<ion-fab vertical="bottom" horizontal="start" slot="fixed">
-			<ion-fab-button (click)="unicornService.mateRandomUnicorns()">
-				<ion-icon name="git-merge-outline"></ion-icon>
-			</ion-fab-button>
-		</ion-fab>
+		<!-- <ion-fab vertical="bottom" horizontal="start" slot="fixed"> -->
+		<!-- 	<ion-fab-button (click)=""> -->
+		<!-- 		<ion-icon name="git-merge-outline"></ion-icon> -->
+		<!-- 	</ion-fab-button> -->
+		<!-- </ion-fab> -->
 		<ion-modal
 			[isOpen]="isUnicornInfoModalOpen"
 			[breakpoints]="[0,1]"
@@ -56,5 +103,4 @@
 			</ng-template>
 		</ion-modal>
 	</ion-content>
-
 </ion-content>
