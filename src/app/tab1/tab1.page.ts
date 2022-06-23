@@ -75,7 +75,14 @@ export class Tab1Page {
 	}
 
 	shouldDisplayUnicorn(unicorn: Unicorn): boolean {
-		return unicorn.name.indexOf(this.currentSearchValue) !== -1;
+		switch(this.uiState) {
+			case UiState.deleting:
+				return true;
+			case UiState.browsing:
+				return unicorn.name.indexOf(this.currentSearchValue) !== -1;
+			default:
+				return this.isUnicornFitForMating(unicorn);
+		}
 	}
 
 	shouldDisplayCheckbox(unicorn: Unicorn) {
