@@ -2,10 +2,10 @@ import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Tab1Page } from './tab1.page';
+import { UnicornPage } from './unicorn.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
-import { Tab1PageRoutingModule } from './tab1-routing.module';
+import { UnicornRoutingModule } from './unicorn-routing.module';
 import { UnicornInfoComponent } from './unicorn-info/unicorn-info.component';
 import { CreateUnicornComponent } from './create-unicorn/create-unicorn.component';
 
@@ -15,8 +15,8 @@ import { CreateUnicornComponent } from './create-unicorn/create-unicorn.componen
 		CommonModule,
 		FormsModule,
 		ExploreContainerComponentModule,
-		Tab1PageRoutingModule
+		UnicornRoutingModule
 	],
-	declarations: [Tab1Page, UnicornInfoComponent, CreateUnicornComponent]
+	declarations: [UnicornPage, UnicornInfoComponent, CreateUnicornComponent]
 })
-export class Tab1PageModule {}
+export class UnicornPageModule {}

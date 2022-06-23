@@ -12,11 +12,12 @@ enum UiState {
 }
 
 @Component({
-	selector: 'app-tab1',
-	templateUrl: 'tab1.page.html',
-	styleUrls: ['tab1.page.scss']
+	selector: 'app-unicorn',
+	templateUrl: 'unicorn.page.html',
+	styleUrls: ['unicorn.page.scss']
 })
-export class Tab1Page {
+
+export class UnicornPage {
 
 	@ViewChild('searchBar') searchBar: ElementRef<IonSearchbar>;
 	unicornList: Unicorn[];
